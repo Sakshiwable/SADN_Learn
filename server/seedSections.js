@@ -3,8 +3,13 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Section from "./models/Section.js";
 
+// Load environment variables
 dotenv.config();
 
+// Fallback if .env is missing MONGO_URI
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/MathWeb";
+
+// Section data
 const sections = [
   { sectionNumber: 1, title: "Addition" },
   { sectionNumber: 2, title: "Multiplication" },
@@ -36,15 +41,21 @@ const sections = [
   { sectionNumber: 28, title: "Wrapping Up: All Patterns Together" },
 ];
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/MathWeb";
-
+// Connect and seed
 mongoose
   .connect(MONGO_URI)
   .then(async () => {
-    await Section.deleteMany(); // Optional: Clears existing sections
-    await Section.insertMany(sections.map((s) => ({ ...s, content: "", questions: [] })));
+    console.log("✅ Connected to MongoDB");
+    await Section.deleteMany(); // Clear existing
+    await Section.insertMany(
+      sections.map((s) => ({
+        ...s,
+        content: "",
+        questions: [],
+      }))
+    );
     console.log("✅ Sections seeded successfully");
-    process.exit();
+    process.exit(0);
   })
   .catch((err) => {
     console.error("❌ Failed to seed sections:", err);

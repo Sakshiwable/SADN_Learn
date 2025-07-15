@@ -1,65 +1,3 @@
-// // controllers/sectionController.js
-
-// import Section from "../models/Section.js";
-
-// // ✅ GET all sections
-// export const getAllSections = async (req, res) => {
-//   try {
-//     const sections = await Section.find();
-//     res.status(200).json(sections);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-// // ✅ GET single section
-// export const getSectionById = async (req, res) => {
-//   try {
-//     const section = await Section.findById(req.params.id);
-//     if (!section) return res.status(404).json({ message: "Section not found" });
-//     res.status(200).json(section);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-// // ✅ POST create a section
-// export const createSection = async (req, res) => {
-//   try {
-//     const newSection = new Section(req.body);
-//     await newSection.save();
-//     res.status(201).json(newSection);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-// // ✅ PUT update a section
-// export const updateSection = async (req, res) => {
-//   try {
-//     const updatedSection = await Section.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//     });
-//     res.status(200).json(updatedSection);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-// // ✅ DELETE section
-// export const deleteSection = async (req, res) => {
-//   try {
-//     await Section.findByIdAndDelete(req.params.id);
-//     res.status(200).json({ message: "Section deleted" });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-
-
-
-// backend/controllers/sectionController.js
 import Section from "../models/Section.js";
 import mongoose from "mongoose";
 
@@ -67,7 +5,11 @@ import mongoose from "mongoose";
 export const getAllSections = async (req, res) => {
   try {
     const sections = await Section.find();
-    res.status(200).json(sections);
+    const safeSections = sections.map((sec) => ({
+      ...sec._doc,
+      content: sec.content || "", 
+    }));
+    res.status(200).json(safeSections);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -86,7 +28,12 @@ export const getSectionById = async (req, res) => {
     if (!section) {
       return res.status(404).json({ message: "Section not found" });
     }
-    res.status(200).json(section);
+
+    // ✅ Make sure content is never null
+    res.status(200).json({
+      ...section._doc,
+      content: section.content || "",
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -95,7 +42,15 @@ export const getSectionById = async (req, res) => {
 // POST create
 export const createSection = async (req, res) => {
   try {
-    const newSection = new Section(req.body);
+    const { title, content, sectionNumber, questions } = req.body;
+
+    const newSection = new Section({
+      title,
+      content: content || "", // ✅ safe fallback
+      sectionNumber,
+      questions: questions || [],
+    });
+
     await newSection.save();
     res.status(201).json(newSection);
   } catch (err) {
@@ -106,9 +61,18 @@ export const createSection = async (req, res) => {
 // PUT update
 export const updateSection = async (req, res) => {
   try {
-    const updatedSection = await Section.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const { title, content, questions } = req.body;
+
+    const updatedSection = await Section.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        content: content || "", // ✅ safe fallback
+        questions: questions || [],
+      },
+      { new: true }
+    );
+
     res.status(200).json(updatedSection);
   } catch (err) {
     res.status(500).json({ message: err.message });

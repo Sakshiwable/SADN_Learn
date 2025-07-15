@@ -1,17 +1,18 @@
 import express from "express";
-import { signupUser, loginUser } from "../controllers/authController.js";
+import { signupUser, loginUser, verifyEmail } from "../controllers/authController.js";
 import User from "../models/User.js";
-import authMiddleware from "../middleware/authMiddleware.js"; // ✅ correct import
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Route: Signup
+// ✅ Signup
 router.post("/signup", signupUser);
 
-// ✅ Route: Login
+// ✅ Login
 router.post("/login", loginUser);
 
-// ✅ Route: Get current user profile
+
+// ✅ Get current user profile
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -23,4 +24,35 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/verify-email", verifyEmail);
+
+// ✅ Update user profile (name or password)
+router.put("/update", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, password } = req.body;
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (password) {
+      const bcrypt = await import("bcryptjs");
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(password, salt);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true }
+    ).select("-password");
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Update failed:", error.message);
+    res.status(500).json({ message: "Server error while updating profile" });
+  }
+});
+
 export default router;
+
+

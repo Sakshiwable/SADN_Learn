@@ -1,29 +1,3 @@
-// import Progress from "../models/Progress.js";
-
-// export const unlockNextSection = async (req, res) => {
-//   const { index } = req.body;
-//   const userId = req.user.id;
-
-//   try {
-//     let progress = await Progress.findOne({ user: userId });
-
-//     if (!progress) {
-//       progress = await Progress.create({ user: userId, unlocked: [0] });
-//     }
-
-//     if (!progress.unlocked.includes(index)) {
-//       progress.unlocked.push(index);
-//       await progress.save();
-//     }
-
-//     res.status(200).json({ message: "Progress updated", unlocked: progress.unlocked });
-//   } catch (err) {
-//     console.error("Progress unlock error:", err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-
 import Progress from "../models/Progress.js";
 
 export const unlockNextSection = async (req, res) => {
@@ -52,11 +26,11 @@ export const unlockNextSection = async (req, res) => {
     await progress.save();
 
     res.json({
-      message: "✅ Section unlocked",
+      message: "Section unlocked",
       unlocked: progress.unlocked,
     });
   } catch (err) {
-    console.error("❌ Unlock error:", err);
+    console.error("Unlock error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
