@@ -27,7 +27,7 @@ const Profile = () => {
       })
       .then((res) => {
         const userData = res.data;
-        if (userData.email === "mrkhare@mitaoe.ac.in") {
+        if (userData.email === "sakshiwable0907@gmail.com") {
         userData.role = "Admin";
       }
 

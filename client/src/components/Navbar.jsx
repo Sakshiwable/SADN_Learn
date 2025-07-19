@@ -80,7 +80,7 @@ const Navbar = () => {
 
           {token && userName && (
             <>
-              {userEmail === "mrkhare@mitaoe.ac.in" && (
+              {userEmail === "sakshiwable0907@gmail.com" && (
                 <button
                   onClick={() => navigate("/admin")}
                   className="flex items-center gap-1 bg-orange-700 text-white px-3 py-1 rounded-lg shadow hover:bg-orange-800 transition"
@@ -159,7 +159,7 @@ const Navbar = () => {
 
           {token && userName && (
             <>
-              {userEmail === "atharvjadhav215@gmail.com" && (
+              {userEmail === "sakshiwable0907@gmail.com" && (
                 <button
                   onClick={() => {
                     setMenuOpen(false);

@@ -5,6 +5,7 @@ import Profile from "./pages/Profile";
 import AuthPage from "./pages/AuthPage";
 import VerifyEmail from "./pages/VerifyEmail";
 
+
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/authpage" />;
@@ -12,7 +13,7 @@ function ProtectedRoute({ children }) {
 
 function AdminRoute({ children }) {
   const userEmail = localStorage.getItem("userEmail");
-  return userEmail === "mrkhare@mitaoe.ac.in" ? children : <Navigate to="/" />;
+  return userEmail === "sakshiwable0907@gmail.com" ? children : <Navigate to="/" />;
 }
 
 function App() {

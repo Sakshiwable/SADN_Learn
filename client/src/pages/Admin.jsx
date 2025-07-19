@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
+
 const Admin = () => {
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
@@ -387,6 +388,7 @@ const Admin = () => {
 
         </main>
       </div>
+    
     </div>
 
   );

@@ -46,7 +46,7 @@ const AuthPage = () => {
                 toast.success("Login successful");
 
                 setTimeout(() => {
-                    if (formData.email.toLowerCase() === "mrkhare@mitaoe.ac.in") {
+                    if (formData.email.toLowerCase() === "sakshiwable0907@gmail.com") {
                         navigate("/admin");
                     } else {
                         navigate("/");
