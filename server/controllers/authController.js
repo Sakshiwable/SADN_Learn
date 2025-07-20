@@ -1,4 +1,3 @@
-// controllers/authController.js
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
@@ -25,6 +24,7 @@ export const signupUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
 
+    // If user exists and is not verified, resend verification email
     if (existingUser && !existingUser.isVerified) {
       const verificationToken = jwt.sign(
         { id: existingUser._id },
@@ -32,8 +32,7 @@ export const signupUser = async (req, res) => {
         { expiresIn: "1h" }
       );
 
-      const baseUrl = process.env.BASE_URL || "http://localhost:5000";
-      const verificationLink = `${baseUrl}/api/verify-email?token=${token}`;
+      const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${verificationToken}`;
       await sendVerificationEmail(existingUser.email, verificationLink);
 
       return res.status(400).json({
@@ -55,19 +54,17 @@ export const signupUser = async (req, res) => {
       role: "Learner",
     });
 
-    // ✅ Create the verification token and link
     const verificationToken = jwt.sign(
       { id: newUser._id },
       process.env.JWT_EMAIL_SECRET,
       { expiresIn: "1h" }
     );
 
-    const verificationLink = `http://localhost:5000/api/auth/verify-email?token=${verificationToken}`;
-
+    const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${verificationToken}`;
     console.log("Verification Link:", verificationLink);
+
     await sendVerificationEmail(newUser.email, verificationLink);
 
-    // ✅ Create login token
     const token = generateToken(newUser._id);
 
     res.status(201).json({
@@ -138,7 +135,8 @@ export const verifyEmail = async (req, res) => {
     user.isVerified = true;
     await user.save();
 
-    res.redirect("http://localhost:5173/authpage");
+    // ✅ Redirect to deployed frontend after verification
+    res.redirect("https://sadn-learn.vercel.app/authpage");
   } catch (err) {
     console.error("Verification Error:", err);
     res.status(400).send("Invalid or expired verification link.");

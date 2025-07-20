@@ -15,7 +15,7 @@ function VerifyEmail() {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/verify-email?token=${token}`)
+    fetch(`https://sadn-learn-backend.onrender.com/api/verify-email?token=${token}`)
       .then((res) => {
         if (res.redirected) {
           window.location.href = res.url; // Redirect handled by backend
