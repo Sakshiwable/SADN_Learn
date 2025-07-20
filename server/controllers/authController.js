@@ -32,7 +32,8 @@ export const signupUser = async (req, res) => {
         { expiresIn: "1h" }
       );
 
-      const verificationLink = `http://localhost:5000/api/auth/verify-email?token=${verificationToken}`;
+      const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+      const verificationLink = `${baseUrl}/api/verify-email?token=${token}`;
       await sendVerificationEmail(existingUser.email, verificationLink);
 
       return res.status(400).json({
@@ -71,7 +72,8 @@ export const signupUser = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Signup successful. Please check your email to verify your account.",
+      message:
+        "Signup successful. Please check your email to verify your account.",
       token,
       user: {
         id: newUser._id,
@@ -130,7 +132,8 @@ export const verifyEmail = async (req, res) => {
     const user = await User.findById(decoded.id);
 
     if (!user) return res.status(404).send("User not found");
-    if (user.isVerified) return res.send("Email already verified. You can log in.");
+    if (user.isVerified)
+      return res.send("Email already verified. You can log in.");
 
     user.isVerified = true;
     await user.save();

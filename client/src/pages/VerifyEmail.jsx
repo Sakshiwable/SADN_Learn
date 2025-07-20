@@ -15,7 +15,7 @@ function VerifyEmail() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/verify-email?token=${token}`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/verify-email?token=${token}`)
       .then((res) => {
         if (res.redirected) {
           window.location.href = res.url; // Redirect handled by backend
