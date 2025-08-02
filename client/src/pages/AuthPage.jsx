@@ -47,7 +47,7 @@ const AuthPage = () => {
 
                 setTimeout(() => {
                     if (formData.email.toLowerCase() === "mrkhare@mitaoe.ac.in") {
-                        navigate("/admin");sakshi
+                        navigate("/admin");
                     } else {
                         navigate("/");
                     }

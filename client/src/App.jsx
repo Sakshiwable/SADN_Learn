@@ -13,7 +13,7 @@ function ProtectedRoute({ children }) {
 
 function AdminRoute({ children }) {
   const userEmail = localStorage.getItem("userEmail");
-  return userEmail === "sakshiwable0907@gmail.com" ? children : <Navigate to="/" />;
+  return userEmail === "mrkhare@mitaoe.ac.in" ? children : <Navigate to="/" />;
 }
 
 function App() {
